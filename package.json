@@ -1,0 +1,29 @@
+{
+  "name": "utensils",
+  "version": "0.0.1",
+  "description": "Base objects as tools for code cleanliness",
+  "author": {
+    "name": "Michael Phillips",
+    "email": "mlp.brooklyn@gmail.com",
+    "url": "http://createbang.com/"
+  },
+  "bugs": {
+    "url": "http://github.com/createbang/utensils/issues",
+    "email": "mlp.brooklyn@gmail.com"
+  },
+  "license": "MIT",
+  "main": "lib/utensils.js",
+  "scripts": {
+    "test": "mocha test/**/*.spec.js --require test/index.js"
+  },
+  "dependencies": {
+    "underscore": "~1.6.0",
+    "q": "~1.0.1"
+  },
+  "devDependencies": {
+    "mocha": "~1.18.2",
+    "chai": "~1.9.1",
+    "sinon": "~1.9.1",
+    "sinon-chai": "~2.5.0"
+  }
+}
