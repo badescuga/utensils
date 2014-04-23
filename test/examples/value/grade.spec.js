@@ -54,7 +54,7 @@ describe('Grade', function() {
       ];
       grade1 = new Grade(0.8);
       expect(grade1.passingGradeLetters()).to.have.length(2);
-      expect(grade1.passingGradeLetters()).to.include.members(['A', 'B']);
+      expect(grade1.passingGradeLetters()).to.have.members(['A', 'B']);
     });
 
   });
