@@ -1,4 +1,4 @@
-var Service = require('utensils').Service;
+var Service = require('../../lib/utensils').Service;
 
 var service1;
 var spy;
