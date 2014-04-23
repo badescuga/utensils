@@ -1,4 +1,4 @@
-var Value = require('../lib/utensils').Value;
+var Value = require('../../lib/utensils').Value;
 var _ = require('underscore');
 
 var Grade = Value.extend({
@@ -12,11 +12,12 @@ var Grade = Value.extend({
   ],
 
   passingGradeLetters: function() {
-    return _.chain( grades ).where({ passing: true }).pluck('letter').value();
+    return _.chain( this.grades ).where({ passing: true }).pluck('letter').value();
   },
 
   details: function() {
-    return _.find( function() { this.value >= min; });
+    var self = this;
+    return _.find( this.grades, function( item ) { return self.value >= item.min; });
   },
 
   letterGrade: function() {
@@ -28,7 +29,13 @@ var Grade = Value.extend({
   },
 
   isImprovementFrom: function( grade ) {
+    if ( grade instanceof Grade === false ) {
+      throw new Error('comparison grade is not an instance of Grade');
+      return false;
+    }
     return this.details().min > grade.details().min;
   }
 
 });
+
+module.exports = Grade;
