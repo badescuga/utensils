@@ -76,7 +76,7 @@ describe('Value', function() {
 
 });
 
-describe('#create', function() {
+describe('#parse', function() {
 
   before( function() {
     Value = require('../../lib/utensils').Value;
