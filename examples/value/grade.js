@@ -1,4 +1,4 @@
-var Value = require('../../lib/utensils').Value;
+var Value = require('utensils').Value;
 var _ = require('underscore');
 
 var Grade = Value.extend({

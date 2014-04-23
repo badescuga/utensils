@@ -22,7 +22,8 @@
   },
   "dependencies": {
     "underscore": "~1.6.0",
-    "q": "~1.0.1"
+    "q": "~1.0.1",
+    "bcrypt": "~0.7.7"
   },
   "devDependencies": {
     "mocha": "~1.18.2",
