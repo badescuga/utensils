@@ -21,9 +21,9 @@
     "test": "mocha test/**/*.spec.js --require test/index.js"
   },
   "dependencies": {
-    "underscore": "~1.6.0",
+    "bcrypt": "~0.7.7",
     "q": "~1.0.1",
-    "bcrypt": "~0.7.7"
+    "underscore": "~1.6.0"
   },
   "devDependencies": {
     "mocha": "~1.18.2",

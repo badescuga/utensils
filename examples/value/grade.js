@@ -1,41 +1,44 @@
-var Value = require('utensils').Value;
 var _ = require('underscore');
 
-var Grade = Value.extend({
+var Grade = function( percentage ) {
+  this.percentage = percentage;
+  this.grade = this.grade( percentage ); 
+};
+
+Grade.prototype = {
 
   grades: [
-    { letter: 'A', min: 0.9, passing: true },
-    { letter: 'B', min: 0.8, passing: true },
-    { letter: 'C', min: 0.7, passing: true },
-    { letter: 'D', min: 0.6, passing: true },
-    { letter: 'F', min: 0,   passing: false }
+    { letter: 'A', minimumPercentage: 0.9, passing: true },
+    { letter: 'B', minimumPercentage: 0.8, passing: true },
+    { letter: 'C', minimumPercentage: 0.7, passing: true },
+    { letter: 'D', minimumPercentage: 0.6, passing: true },
+    { letter: 'F', minimumPercentage: 0,   passing: false }
   ],
 
   passingGradeLetters: function() {
     return _.chain( this.grades ).where({ passing: true }).pluck('letter').value();
   },
 
-  details: function() {
-    var self = this;
-    return _.find( this.grades, function( item ) { return self.value >= item.min; });
+  grade: function( percentage ) {
+    return _.find( this.grades, function( grade ) { return percentage >= grade.minimumPercentage; });
   },
 
   letterGrade: function() {
-    return this.details().letter;
+    return this.grade.letter;
   },
 
   isPassing: function() {
-    return this.passingGradeLetters().indexOf( this.letterGrade() ) !== -1;
+    return this.grade.passing
   },
 
   isImprovementFrom: function( grade ) {
-    if ( grade instanceof Grade === false ) {
-      throw new Error('comparison grade is not an instance of Grade');
-      return false;
-    }
-    return this.details().min > grade.details().min;
+    return this.isBetterThan( grade );
+  },
+
+  isBetterThan: function( grade ) {
+    return this.percentage > grade.percentage;
   }
 
-});
+};
 
 module.exports = Grade;
