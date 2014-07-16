@@ -7,18 +7,13 @@ describe('Service', function() {
 
   before( function() {
     Service = Service.extend({
-      initialize: function() {}
+      procedures: [
+        this.step1,
+        this.step2
+      ],
+      step1: function
     });
-    spy = sinon.spy( Service.prototype, 'initialize' );
     service1 = new Service();
-  });
-
-  describe('#initialize', function() {
-
-    it('runs on initialization', function() {
-      expect( spy ).to.have.been.calledOnce;
-    });
-
   });
 
 });
