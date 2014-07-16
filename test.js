@@ -1,27 +1,55 @@
-var Form = require('./lib/utensils').Form;
-var Validator = require('./lib/utensils').Validator;
-var _ = require('underscore');
+var utensils = require('./lib/utensils');
+var Form = utensils.Form;
+var Validator = utensils.Validator;
+var Service = utensils.Service;
 
-var MyValidator = Validator.extend({
 
-  foo: function() {
+
+var AccountValidator = Validator.extend({
+
+  email: function() {
     return true;
   },
 
-  bar: function(resolve, reject) {
-    reject('problem, sir');
+  gender: function(resolve, reject) {
+    resolve();
   }
 
 });
 
-var MyForm = Form.extend({
 
-  validator: MyValidator
+
+var CreateAccount = Service.extend({
+
+  argumentNames: ['account'],
+
+  procedure: [
+    'saveToDatabase',
+    'sendWelcomeEmail'
+  ],
+
+  saveToDatabase: function( resolve, reject ) {
+    resolve();
+  },
+
+  sendWelcomeEmail: function() {
+    throw new Error('foo');
+  }
 
 });
 
-var myForm = new MyForm({first: 'michael', last: 'phillips'});
 
-myForm.process()
-  .then(function(){ console.log('done, yay!', arguments) })
-  .fail(function(){ console.log('fail, sad!', arguments) });
+
+var MyForm = Form.extend({
+
+  validator: AccountValidator,
+
+  persistor: CreateAccount,
+
+});
+
+
+
+new MyForm({first: 'michael', last: 'phillips'}).process()
+  .then(function(){ console.log('done' ) })
+  .fail(function( errors ){ console.log('fail' ) });
