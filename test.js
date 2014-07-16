@@ -1,55 +1,38 @@
 var utensils = require('./lib/utensils');
-var Form = utensils.Form;
-var Validator = utensils.Validator;
-var Service = utensils.Service;
+var Query = utensils.Query;
+var db = require('./db');
+var Q = require('q');
 
 
 
-var AccountValidator = Validator.extend({
+var ActiveAccountsQuery = Query.extend({
 
-  email: function() {
-    return true;
-  },
+  db: db,
 
-  gender: function(resolve, reject) {
-    resolve();
-  }
-
-});
-
-
-
-var CreateAccount = Service.extend({
-
-  argumentNames: ['account'],
-
-  procedure: [
-    'saveToDatabase',
-    'sendWelcomeEmail'
+  collectionsNames: [
+    'accounts',
+    'cars'
   ],
 
-  saveToDatabase: function( resolve, reject ) {
-    resolve();
+  procedure: [
+    'getAccounts',
+    'somethingAsync'
+  ],
+
+  getAccounts: function() {
+    return Q.ninvoke( this.collections.accounts, 'find' )
+      .then( this.toArray );
   },
 
-  sendWelcomeEmail: function() {
-    throw new Error('foo');
+  somethingAsync: function( accounts ) {
+    return Q.ninvoke( this.collections.cars, 'find')
+      .then( this.toArray );
   }
 
 });
 
 
 
-var MyForm = Form.extend({
-
-  validator: AccountValidator,
-
-  persistor: CreateAccount,
-
-});
-
-
-
-new MyForm({first: 'michael', last: 'phillips'}).process()
-  .then(function(){ console.log('done' ) })
-  .fail(function( errors ){ console.log('fail' ) });
+new ActiveAccountsQuery().perform()
+  .then(function( documents ){ console.log( 'done', documents ); })
+  .fail(function( errors ){ console.log('fail', arguments ) });
