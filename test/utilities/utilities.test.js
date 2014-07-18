@@ -53,45 +53,4 @@ describe('utilities', function() {
 
   });
 
-  describe('#assignArgumentsAsProperties', function() {
-
-    var Person;
-    var person;
-
-    describe('arguments separated', function() {
-
-      before( function() {
-        Person = function() {
-          utilities.assignArgumentsAsProperties.call( this, this.run, arguments );
-          return this.run();
-        };
-        Person.prototype.run = function( age, name, gender ) {};
-        person = new Person( 27, 'Michael Phillips', 'm' );
-      });
-
-      it('scopes all values of the arguments to this', function() {
-        expect(person.age).to.equal(27)
-      });
-
-    });
-
-    describe('arguments as object', function() {
-
-      before( function() {
-        Person = function() {
-          utilities.assignArgumentsAsProperties.call( this, this.run, arguments );
-          return this.run();
-        };
-        Person.prototype.run = function() {};
-        person = new Person({ age: 27, name: 'Michael Phillips', gender: 'm' });
-      });
-
-      it('scopes all values of the arguments to this', function() {
-        expect(person.age).to.equal(27)
-      });
-
-    });
-
-  });
-
 });

@@ -1,4 +1,4 @@
-var utensils = require('./lib/utensils');
+var utensils = require('../lib/utensils');
 var Presenter = utensils.Presenter;
 
 
