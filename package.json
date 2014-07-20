@@ -7,6 +7,7 @@
     "email": "mlp.brooklyn@gmail.com",
     "url": "http://createbang.com/"
   },
+  "homepage": "http://utensilsjs.org",
   "bugs": {
     "url": "http://github.com/createbang/utensils/issues",
     "email": "mlp.brooklyn@gmail.com"
@@ -18,7 +19,9 @@
   "license": "MIT",
   "main": "lib/utensils.js",
   "scripts": {
-    "test": "mocha test/**/*.spec.js --require test/index.js"
+    "test": "mocha test/**/*.test.js --require test/index.js",
+    "docs": "docco lib/utensils.js",
+    "build": "uglifyjs lib/utensils.js --mangle --source-map dist/utensils-min.map -o dist/utensils-min.js"
   },
   "dependencies": {
     "bcrypt": "~0.7.7",
@@ -30,6 +33,7 @@
     "chai": "~1.9.1",
     "sinon": "~1.9.1",
     "sinon-chai": "~2.5.0",
-    "chai-as-promised": "~4.1.1"
+    "chai-as-promised": "~4.1.1",
+    "codeclimate-test-reporter": "0.0.3"
   }
 }

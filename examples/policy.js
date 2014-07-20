@@ -1,6 +1,6 @@
-var Policy = require('../lib/utensils').Policy;
+var Utensils = require('utensils');
 
-var ActiveStudentPolicy = Policy.extend({
+var ActiveStudentPolicy = Utensils.Policy.extend({
 
   argumentName: 'student',
 

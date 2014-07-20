@@ -1,9 +1,6 @@
-var utensils = require('./lib/utensils');
-var Service = utensils.Service;
+var Utensils = require('utensils');
 
-
-
-var CreateAccount = Service.extend({
+var CreateAccount = Utensils.Service.extend({
 
   argumentNames: ['account'],
 

@@ -1,9 +1,6 @@
-var utensils = require('../lib/utensils');
-var Presenter = utensils.Presenter;
+var Utensils = require('utensils');
 
-
-
-var AccountPresenter = Presenter.extend({
+var AccountPresenter = Utensils.Presenter.extend({
 
   whitelist: ['first', 'last'],
 

@@ -1,9 +1,6 @@
-var utensils = require('./lib/utensils');
-var Validator = utensils.Validator;
+var Utensils = require('utensils');
 
-
-
-var AccountValidator = Validator.extend({
+var AccountValidator = Utensils.Validator.extend({
 
   email: function() {
     return true;

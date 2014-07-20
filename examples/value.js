@@ -1,3 +1,3 @@
-var Value = require('../lib/utensils').Value;
+var Utensils = require('utensils');
 
-var MyValue = Value.extend({});
+var MyValue = Utensils.Value.extend({});

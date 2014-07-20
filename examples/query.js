@@ -1,11 +1,8 @@
-var utensils = require('./lib/utensils');
-var Query = utensils.Query;
+var Utensils = require('utensils');
 var db = require('./db');
 var Q = require('q');
 
-
-
-var ActiveAccountsQuery = Query.extend({
+var ActiveAccountsQuery = Utensils.Query.extend({
 
   db: db,
 
@@ -18,6 +15,10 @@ var ActiveAccountsQuery = Query.extend({
     'getAccounts',
     'somethingAsync'
   ],
+
+  toArray: function( queryResults ) {
+    return Q.ninvoke( queryResults, 'toArray' );
+  },
 
   getAccounts: function() {
     return Q.ninvoke( this.collections.accounts, 'find' )

@@ -6,6 +6,7 @@ global.sinon = require('sinon');
 global.sinonChai = require('sinon-chai');
 global.chaiAsPromised = require('chai-as-promised');
 global._ = require('underscore');
+global.Utensils = require('../lib/utensils');
 
 // configure
 global.Q.longStackTraces = true;

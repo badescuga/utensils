@@ -1,4 +1,4 @@
-var Utensils = require('../lib/utensils');
+var Utensils = require('utensils');
 
 var SignIntoApp1 = Utensils.Decorator.extend({
 
