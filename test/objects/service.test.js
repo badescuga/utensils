@@ -3,6 +3,21 @@ var Service = Utensils.Service;
 
 describe('Service', function() {
 
+  describe('#constructor', function(){
+    
+    it('executes the base constructor', function(){
+      var baseConstructor = sinon.spy( Utensils.Base.prototype, 'constructor' );
+      var service = new (Utensils.Service.extend({
+        procedure: ['firstOperation', 'secondOperation'],
+        firstOperation: function() { a = arguments[0]; return 'firstOperation'; },
+        secondOperation: function() { b = arguments[0]; return 'secondOperation'; }
+      }));
+
+      expect(baseConstructor).to.have.been.calledOnce;
+    });
+    
+  });
+
   describe('.procedure', function(){
     
     it('is required unless only one method is defined', function(){
@@ -49,7 +64,7 @@ describe('Service', function() {
         done();
       });
     });
-    
+
     it('returns a promise', function(){
       var service = new (Utensils.Service.extend({
         firstOperation: function() {}

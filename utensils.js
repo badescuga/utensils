@@ -134,7 +134,7 @@
         throw new Error('Service object must have a defined procedure');
       }
 
-      this.procedureMethods = prepareProcedureMethods.apply(this, [this.procedure]);
+      this.procedureMethods = prepareProcedureMethods(this.procedure, this);
     },
 
     run: function(initialValue) {
@@ -151,11 +151,6 @@
 
     argumentName: 'data',
 
-    // map #run for expressive API
-    process: function() {
-      return this.run.apply( this, arguments );
-    },
-
     // default procedure for a form object 
     // is to first validate the input and then
     // process the form
@@ -164,28 +159,36 @@
       'process'
     ],
 
-    run: function() {
+    constructor: function() {
       var self = this;
+
+      Base.prototype.constructor.apply( this, arguments );
 
       // if a constructor is defined on .validator, 
       // overwrite #validate with a promise-wrapped 
       // function returning a new instance of the constructor
       if ( this.validator ) {
-        this.validate = function() { return new self.validator( self[ self.argumentNames[0] ] ).run(); };
+        var Validator = ( isPattern( this.validator, 'Validator' ) ) ? this.validator : _.result( this, 'validator' );
+        this.validate = function() { return new Validator( self[ self.argumentNames[0] ] ).run(); };
       }
 
       // if a constructor is defined on .processor, 
       // overwrite #process with a promise-wrapped 
       // function returning a new instance of the constructor
       if ( this.processor ) {
-        this.process = function() { return new self.processor( self.argumentNames[0] ).run(); };
+        var Processor = ( isPattern( this.processor, 'Service' ) ) ? this.processor : _.result( this, 'processor' );
+        this.process = function() { return new Processor( self[ self.argumentNames[0] ] ).run(); };
       }
-      
-      var procedureMethods = prepareProcedureMethods( this.procedure );
 
-      return promiseSequence( procedureMethods )
-        .then(this.success)
-        .fail(this.error);
+      // a process method must be defined, otherwise nothing is 
+      // happening with this form object.
+      if ( _.isUndefined( this.process ) ) { throw new Error('A `process` method must be defined'); }
+      
+      this.procedureMethods = prepareProcedureMethods( this.procedure, this );
+    },
+
+    run: function() {
+      return promiseSequence( this.procedureMethods );
     }
 
   });
@@ -197,30 +200,29 @@
 
     argumentName: 'data',
 
+    constructor: function() {
+      Base.prototype.constructor.apply( this, arguments );
+
+      this.procedureMethods = this.prepareProcedureMethods( _.functions( this.constructor.__protoProps__ ), this );
+    },
+
     // map #run for expressive API
     validate: function() {
       return this.run.apply( this, arguments );
     },
 
     run: function() {
-      // returns an object of all functions defined on the 
-      // implementation of the Validator constructor
-      // or, rather, is the object passed into Validator.extend
-      var procedureMethods = this.prepareProcedureMethods( _.functions( this.constructor.__protoProps__ ) );
-
-      // call all methods simultaneously, returning
-      // all results
-      var procedureMethodPromises = returnArrayOfResultsFromExecutedFunctions( procedureMethods );
+      var procedureMethodPromises = returnArrayOfResultsFromExecutedFunctions( this.procedureMethods );
       return Q.allSettled( procedureMethodPromises )
         .then( this.parseResults );
     },
 
-    prepareProcedureMethods: function( procedureMethodKeys ) {
+    prepareProcedureMethods: function( procedureMethodKeys, context ) {
       var procedureMethods;
 
-      procedureMethods = getObjectMethodsByName( procedureMethodKeys, this );
-      procedureMethods = wrapAnySyncFunctionsWithBooleanPromiseHandling( procedureMethods, this );
-      procedureMethods = wrapAnySequenceFunctionsThatRequestedPromises( procedureMethods, this, { 
+      procedureMethods = getObjectMethodsByName( procedureMethodKeys, context );
+      procedureMethods = wrapAnySyncFunctionsWithBooleanPromiseHandling( procedureMethods, context );
+      procedureMethods = wrapAnySequenceFunctionsThatRequestedPromises( procedureMethods, context, { 
         sequence: false, 
         reject: function( fn, reject ) {
           return function( error ) {
@@ -228,7 +230,7 @@
           };
         }
       });
-      procedureMethods = returnBoundObjectMethods( procedureMethods, this );
+      procedureMethods = returnBoundObjectMethods( procedureMethods, context );
 
       return procedureMethods;
     },
@@ -254,7 +256,15 @@
   // Query
   // ---------------
   
-  var Query = Base.extend({
+  var Query = Utensils.Query = Base.extend({
+
+    constructor: function() {
+      Base.prototype.constructor.apply( this, arguments );
+
+      if ( _.isUndefined( this.process ) ) { throw new Error('A procedure must be defined'); }
+
+      this.procedureMethods = prepareProcedureMethods( _.functions( this.constructor.__protoProps__ ), this );
+    },
 
     // map #run for expressive API
     perform: function() {
@@ -263,8 +273,6 @@
 
     run: function() {
       var self = this;
-
-      var procedureMethods = prepareProcedureMethods( this.procedure );
 
       return this.setup()
         .then(function() {
@@ -418,9 +426,7 @@
     _customAttributes: function( item ) {
       var result = {};
 
-      var customAttributeFunctions = this.prepareProcedureMethods( _.functions( this.constructor.__protoProps__ ), { 
-        context: { item: item } 
-      });
+      var customAttributeFunctions = prepareProcedureMethods( _.functions( this.constructor.__protoProps__ ), item );
 
       _.each( customAttributeFunctions, function( fn ) {
         result[ fn._name ] = fn();
@@ -445,9 +451,8 @@
       // returns an object of all functions defined on the 
       // implementation of the Validator constructor
       // or, rather, is the object passed into Validator.extend
-      var procedureMethods = this.prepareProcedureMethods( _.functions( this.constructor.__protoProps__ ), { 
-        context: _.pick.call( null, this, this.argumentNames )
-      });
+      var context = _.pick.call( null, this, this.argumentNames );
+      var procedureMethods = this.prepareProcedureMethods( _.functions( this.constructor.__protoProps__ ), context );
 
       // call all methods simultaneously, returning
       // all results
@@ -456,13 +461,13 @@
         .then( this.parseResults );
     },
 
-    prepareProcedureMethods: function( procedureMethodKeys, options ) {
+    prepareProcedureMethods: function( procedureMethodKeys, context, options ) {
       options = ( options || {} );
       var procedureMethods;
 
       procedureMethods = getObjectMethodsByName( procedureMethodKeys, this );
-      procedureMethods = wrapAnySyncFunctionsWithBooleanPromiseHandling( procedureMethods, options.context || this, options );
-      procedureMethods = wrapAnySequenceFunctionsThatRequestedPromises( procedureMethods, options.context || this, { 
+      procedureMethods = wrapAnySyncFunctionsWithBooleanPromiseHandling( procedureMethods, context, options );
+      procedureMethods = wrapAnySequenceFunctionsThatRequestedPromises( procedureMethods, context, { 
         sequence: false, 
         reject: function( fn, reject ) {
           return function( error ) {
@@ -524,7 +529,7 @@
         }
       }
 
-      var procedureMethods = this.prepareProcedureMethods( this.procedure, { 
+      var procedureMethods = prepareProcedureMethods( this.procedure, this, { 
         firstMethodTakesArgument: true 
       });
 
@@ -564,19 +569,19 @@
   }
 
   // Attach #extend to each of the base objects
-  _.each([ Value, Service, Form, Validator, Query, Presenter, Policy, Decorator ], function( Ctor ) {
-    Ctor.extend = extend;
+  _.each([ 'Value', 'Service', 'Form', 'Validator', 'Query', 'Presenter', 'Policy', 'Decorator' ], function( CtorName ) {
+    Utensils[CtorName].extend = extend;
+    Utensils[CtorName].__pattern__ = CtorName;
   });
 
-  function prepareProcedureMethods( procedureMethodKeys, options ) {
+  function prepareProcedureMethods( procedureMethodKeys, context, options ) {
     options = ( options || {} );
     
     var procedureMethods;
 
-    procedureMethods = getObjectMethodsByName( procedureMethodKeys, this, options );
-    procedureMethods = wrapAnySequenceFunctionsThatRequestedPromises( procedureMethods, options.context || this, options );
-    procedureMethods = returnBoundObjectMethods( procedureMethods, options.context || this, options );
-
+    procedureMethods = getObjectMethodsByName( procedureMethodKeys, context );
+    procedureMethods = wrapAnySequenceFunctionsThatRequestedPromises( procedureMethods, context, options );
+    procedureMethods = returnBoundObjectMethods( procedureMethods, context, options );
 
     return procedureMethods;
   }
@@ -680,27 +685,31 @@
   }
 
   function getObjectMethodsByName( fnNames, obj ) {
-    return _.map( fnNames, function( fnName ) {
-      var fn = obj[fnName];
+    return _.chain( fnNames )
+      .map( function( fnName ) {
+        var fn = obj[fnName];
 
-      // if the function is found, scope the name of the function
-      // to the function itself for later reference. 
-      // Uses _name since name is read-only
-      if ( fn ) { fn._name = fnName; }
+        // if the function is found, scope the name of the function
+        // to the function itself for later reference. 
+        // Uses _name since name is read-only
+        if ( fn ) { fn._name = fnName; }
 
-      return fn;
+        return fn;
+      })
+      .compact()
+      .value();
+  }
+
+  function returnBoundObjectMethods( fns, context ) {
+    return _.map( fns, function(fn) {
+      var boundFn = _.bind( fn, context );
+      scopeName( boundFn, fn );
+      return boundFn;
     });
   }
 
-  function returnBoundObjectMethods( fns, obj ) {
-    return _.chain(fns)
-      .compact()
-      .map(function(fn) {
-        var boundFn = _.bind( fn, obj );
-        scopeName( boundFn, fn );
-        return boundFn;
-      })
-      .value();
+  function isPattern( Ctor, PatternName ) {
+    return Ctor.prototype.constructor.__pattern__ === PatternName;
   }
 
   return Utensils;
