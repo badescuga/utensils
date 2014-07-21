@@ -13,4 +13,4 @@ global.chaiAsPromised = require('chai-as-promised');
 global.chai.use( chaiAsPromised );
 
 // lib
-global.Utensils = require('../lib/utensils');
+global.Utensils = require('../utensils');

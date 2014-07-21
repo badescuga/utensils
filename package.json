@@ -1,7 +1,8 @@
 {
   "name": "utensils",
   "version": "0.1.0",
-  "description": "Base objects as tools for code cleanliness",
+  "description": "Utensils provides a rich set of interoperable design pattern abstractions for web application development.",
+  "keywords": ["value", "service", "form", "validate", "validator", "query", "policy", "presenter", "decorator", "server", "client", "browser"],
   "author": {
     "name": "Michael Phillips",
     "email": "mlp.brooklyn@gmail.com",
@@ -17,11 +18,11 @@
     "url": "https://github.com/createbang/utensils.git"
   },
   "license": "MIT",
-  "main": "lib/utensils.js",
+  "main": "utensils.js",
   "scripts": {
     "test": "mocha test/**/*.test.js --require test/index.js",
-    "docs": "docco lib/utensils.js",
-    "build": "uglifyjs lib/utensils.js --mangle --source-map dist/utensils-min.map -o dist/utensils-min.js"
+    "docs": "docco utensils.js",
+    "build": "uglifyjs utensils.js --mangle --source-map utensils-min.map -o utensils-min.js"
   },
   "dependencies": {
     "bcrypt": "~0.7.7",

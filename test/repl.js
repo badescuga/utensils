@@ -1,6 +1,6 @@
 var repl = require("repl");
-var utensils = require('./lib/utensils');
-var utilities = require('./lib/utilities/utilities');
+var utensils = require('./utensils');
+var utilities = require('./utilities/utilities');
 var Q = require('q');
 var _ = require('underscore');
  
