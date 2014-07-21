@@ -1,28 +1,11 @@
 [![Travis CI](https://travis-ci.org/createbang/utensils.svg)](https://travis-ci.org/createbang/utensils)
-[![Coverage Status](https://coveralls.io/repos/createbang/utensils/badge.png)](https://coveralls.io/r/createbang/utensils)
+[![Test Coverage](https://codeclimate.com/repos/53c9b753695680405900b496/badges/82a2e2e7daa397c94ced/coverage.png)](https://codeclimate.com/repos/53c9b753695680405900b496/feed)
 
-utensils.js
+Utensils
 ========
 
-Base objects as tools for code cleanliness
+Utensils provides a rich set of design pattern abstractions for web application development. 
 
-# Introduction
+Most modern web applications perform similar types of operations, but there is a significant lack of structure for those operations in the JavaScript environment. This library is meant to provide a toolkit of opinionated, useful, and interoperable components to make common tasks in JavaScript web applications quick and easy.
 
-
-
-# Patterns
-
-## Value
-
-Value Objects are objects whos equality is determined not by identity but by value.
-
-```js
-var Grade = Utensils.Value.extend();
-
-var firstScore = new Grade(0.6);
-var secondScore = new Grade(0.6);
-
-firstScore === secondScore // false
-firstScore.isEqualTo(secondScore) // true
-Utensils.Value.isEqual(firstScore, secondScore) // true
-```
+Documentation and all other related information is available at [http://utensilsjs.org](http://utensilsjs.org).
