@@ -99,7 +99,7 @@ others that may still expect a global Utensils.</p>
             <div class="content"><div class='highlight'><pre>  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> exports !== <span class="hljs-string">'undefined'</span>) {
     <span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'underscore'</span>);
     <span class="hljs-keyword">var</span> Q = <span class="hljs-built_in">require</span>(<span class="hljs-string">'q'</span>);
-    factory(root, exports, _);</pre></div></div>
+    factory(root, exports, _, Q);</pre></div></div>
             
         </li>
         
@@ -408,7 +408,8 @@ pre-filling the first method with the instance</p>
             <div class="content"><div class='highlight'><pre>
   <span class="hljs-keyword">var</span> Service = Utensils.Service = Base.extend({
 
-    constructor: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div></div>
+    constructor: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      Base.prototype.constructor.apply( <span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span> );</pre></div></div>
             
         </li>
         
@@ -419,11 +420,15 @@ pre-filling the first method with the instance</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>call <code>Base#constructor</code></p>
+              <p>if only one method is defined on the extended object
+use that one method for the procedure, meaning this.procedure
+doesn’t need to be defined explicitly if only one method is defined</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      Base.prototype.constructor.apply( <span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span> );</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> protoPropFunctionKeys = _.without( _.functions( <span class="hljs-keyword">this</span>.constructor.__protoProps__ ), <span class="hljs-string">'error'</span> );
+      <span class="hljs-keyword">if</span> ( protoPropFunctionKeys.length === <span class="hljs-number">1</span> ) 
+        <span class="hljs-keyword">this</span>.procedure = protoPropFunctionKeys;</pre></div></div>
             
         </li>
         
@@ -434,23 +439,19 @@ pre-filling the first method with the instance</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>if only one method is defined on the prototype
-use that for the procedure, meaning this.procedure
-doesn’t need to be described with just one value</p>
+              <p>if a procedure is either not defined or cannot be extrapolated,
+throw error.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> protoPropProcedureMethods = _.functions( <span class="hljs-keyword">this</span>.constructor.__protoProps__ );
-      <span class="hljs-keyword">if</span> ( protoPropProcedureMethods.length === <span class="hljs-number">1</span> ) {
-        <span class="hljs-keyword">this</span>.procedure = protoPropProcedureMethods;
-      }
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (_.isUndefined( <span class="hljs-keyword">this</span>.procedure ))
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Service object must have a defined procedure'</span>);
 
-      <span class="hljs-keyword">this</span>.procedureMethods = prepareProcedureMethods( <span class="hljs-keyword">this</span>.procedure );
+      <span class="hljs-keyword">this</span>.procedureMethods = prepareProcedureMethods.apply(<span class="hljs-keyword">this</span>, [<span class="hljs-keyword">this</span>.procedure]);
     },
 
-    run: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
-      <span class="hljs-keyword">return</span> promiseSequence( <span class="hljs-keyword">this</span>.procedureMethods )
-        .then(<span class="hljs-keyword">this</span>.success)
+    run: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(initialValue)</span> </span>{
+      <span class="hljs-keyword">return</span> promiseSequence.call( <span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>.procedureMethods, initialValue)
         .fail(<span class="hljs-keyword">this</span>.error);
     }
 
@@ -1348,13 +1349,14 @@ doesn’t need to be described with just one value</p>
     procedureMethods = wrapAnySequenceFunctionsThatRequestedPromises( procedureMethods, options.context || <span class="hljs-keyword">this</span>, options );
     procedureMethods = returnBoundObjectMethods( procedureMethods, options.context || <span class="hljs-keyword">this</span>, options );
 
+
     <span class="hljs-keyword">return</span> procedureMethods;
   };
 
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">promiseSequence</span><span class="hljs-params">(fns, initialVal)</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">promiseSequence</span><span class="hljs-params">(fns, initialValue)</span> </span>{
     <span class="hljs-keyword">return</span> fns.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(soFar, f)</span> </span>{
       <span class="hljs-keyword">return</span> soFar.then(f);
-    }, initialVal ? Q(initialVal) : Q.when());
+    }, initialValue ? Q(initialValue) : Q.when());
   };
 
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">wrapWithPromise</span><span class="hljs-params">( staticFn, args, context, options )</span> </span>{
@@ -1442,7 +1444,8 @@ function, even if it’s undefined.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">if</span> ( index &gt;= <span class="hljs-number">1</span> &amp;&amp; options.sequence !== <span class="hljs-literal">false</span> || index === <span class="hljs-number">0</span> &amp;&amp; options.firstMethodTakesArgument === <span class="hljs-literal">true</span> ) args.push(res);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">if</span> ( options.sequence !== <span class="hljs-literal">false</span> ) 
+            args.push(res);</pre></div></div>
             
         </li>
         
@@ -1483,7 +1486,7 @@ at least the resolve fn, or both resolve and reject</p>
             
             <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">return</span> fn.apply( context, args );
         }
-        self.scopeName( newFn, fn );
+        scopeName( newFn, fn );
         <span class="hljs-keyword">return</span> newFn;
       })
       .value();
@@ -1527,7 +1530,7 @@ Uses _name since name is read-only</p>
       .compact()
       .map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(fn)</span> </span>{
         <span class="hljs-keyword">var</span> boundFn = _.bind( fn, obj );
-        self.scopeName( boundFn, fn );
+        scopeName( boundFn, fn );
         <span class="hljs-keyword">return</span> boundFn;
       })
       .value();

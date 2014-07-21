@@ -1,8 +1,28 @@
 [![Travis CI](https://travis-ci.org/createbang/utensils.svg)](https://travis-ci.org/createbang/utensils)
-[![Code Climate](https://codeclimate.com/repos/53c9b753695680405900b496/badges/82a2e2e7daa397c94ced/gpa.png)](https://codeclimate.com/repos/53c9b753695680405900b496/feed)
-[![Test Coverage](https://codeclimate.com/repos/53c9b753695680405900b496/badges/82a2e2e7daa397c94ced/coverage.png)](https://codeclimate.com/repos/53c9b753695680405900b496/feed)
+[![Coverage Status](https://coveralls.io/repos/createbang/utensils/badge.png)](https://coveralls.io/r/createbang/utensils)
 
 utensils.js
 ========
 
 Base objects as tools for code cleanliness
+
+# Introduction
+
+
+
+# Patterns
+
+## Value
+
+Value Objects are objects whos equality is determined not by identity but by value.
+
+```js
+var Grade = Utensils.Value.extend();
+
+var firstScore = new Grade(0.6);
+var secondScore = new Grade(0.6);
+
+firstScore === secondScore // false
+firstScore.isEqualTo(secondScore) // true
+Utensils.Value.isEqual(firstScore, secondScore) // true
+```
