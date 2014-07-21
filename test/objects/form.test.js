@@ -19,6 +19,7 @@ describe('Form', function(){
       }));
 
       expect(baseConstructor).to.have.been.calledOnce;
+      baseConstructor.restore();
     });
 
     it('overrides #validate if .validator is specified', function( done ){

@@ -14,6 +14,7 @@ describe('Service', function() {
       }));
 
       expect(baseConstructor).to.have.been.calledOnce;
+      baseConstructor.restore();
     });
     
   });
