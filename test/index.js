@@ -1,14 +1,16 @@
-// define global dependencies on the global object
+global._ = require('underscore');
 global.Q = require('q');
+global.Q.longStackTraces = true;
+
 global.chai = require('chai');
 global.expect = chai.expect;
 global.sinon = require('sinon');
-global.sinonChai = require('sinon-chai');
-global.chaiAsPromised = require('chai-as-promised');
-global._ = require('underscore');
-global.Utensils = require('../lib/utensils');
 
-// configure
-global.Q.longStackTraces = true;
+global.sinonChai = require('sinon-chai');
 global.chai.use( sinonChai );
+
+global.chaiAsPromised = require('chai-as-promised');
 global.chai.use( chaiAsPromised );
+
+// lib
+global.Utensils = require('../lib/utensils');

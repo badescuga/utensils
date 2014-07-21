@@ -408,8 +408,7 @@ pre-filling the first method with the instance</p>
             <div class="content"><div class='highlight'><pre>
   <span class="hljs-keyword">var</span> Service = Utensils.Service = Base.extend({
 
-    constructor: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
-      Base.prototype.constructor.apply( <span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span> );</pre></div></div>
+    constructor: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div></div>
             
         </li>
         
@@ -419,6 +418,21 @@ pre-filling the first method with the instance</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>call <code>Base#constructor</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      Base.prototype.constructor.apply( <span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span> );</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>if only one method is defined on the prototype
 use that for the procedure, meaning this.procedure
@@ -435,8 +449,6 @@ doesn’t need to be described with just one value</p>
     },
 
     run: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
-      <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
-
       <span class="hljs-keyword">return</span> promiseSequence( <span class="hljs-keyword">this</span>.procedureMethods )
         .then(<span class="hljs-keyword">this</span>.success)
         .fail(<span class="hljs-keyword">this</span>.error);
@@ -447,11 +459,11 @@ doesn’t need to be described with just one value</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <h2 id="form">Form</h2>
 
@@ -460,11 +472,11 @@ doesn’t need to be described with just one value</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               
             </div>
@@ -477,11 +489,11 @@ doesn’t need to be described with just one value</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>map #run for expressive API</p>
 
@@ -494,11 +506,11 @@ doesn’t need to be described with just one value</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>default procedure for a form object 
 is to first validate the input and then
@@ -517,11 +529,11 @@ process the form</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>if a constructor is defined on .validator, 
 overwrite #validate with a promise-wrapped 
@@ -536,11 +548,11 @@ function returning a new instance of the constructor</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>if a constructor is defined on .processor, 
 overwrite #process with a promise-wrapped 
@@ -564,11 +576,135 @@ function returning a new instance of the constructor</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <h2 id="validator">Validator</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  <span class="hljs-keyword">var</span> Validator = Utensils.Validator = Base.extend({
+
+    argumentName: <span class="hljs-string">'data'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>map #run for expressive API</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    validate: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.run.apply( <span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span> );
+    },
+
+    run: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>returns an object of all functions defined on the 
+implementation of the Validator constructor
+or, rather, is the object passed into Validator.extend</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+
+      <span class="hljs-keyword">var</span> procedureMethods = <span class="hljs-keyword">this</span>.prepareProcedureMethods( _.functions( <span class="hljs-keyword">this</span>.constructor.__protoProps__ ) );</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>call all methods simultaneously, returning
+all results</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> procedureMethodPromises = returnArrayOfResultsFromExecutedFunctions( procedureMethods );
+      <span class="hljs-keyword">return</span> Q.allSettled( procedureMethodPromises )
+        .then( <span class="hljs-keyword">this</span>.parseResults );
+    },
+
+    prepareProcedureMethods: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( procedureMethodKeys )</span> </span>{
+      <span class="hljs-keyword">var</span> procedureMethods;
+
+      procedureMethods = getObjectMethodsByName( procedureMethodKeys, <span class="hljs-keyword">this</span> );
+      procedureMethods = wrapAnySyncFunctionsWithBooleanPromiseHandling( procedureMethods, <span class="hljs-keyword">this</span> );
+      procedureMethods = wrapAnySequenceFunctionsThatRequestedPromises( procedureMethods, <span class="hljs-keyword">this</span>, { 
+        sequence: <span class="hljs-literal">false</span>, 
+        reject: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( fn, reject )</span> </span>{
+          <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( error )</span> </span>{
+            <span class="hljs-keyword">return</span> reject({ name: fn._name, error: error });
+          }
+        }
+      });
+      procedureMethods = returnBoundObjectMethods( procedureMethods, <span class="hljs-keyword">this</span> );
+
+      <span class="hljs-keyword">return</span> procedureMethods;
+    },
+
+    parseResults: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( results )</span> </span>{
+      <span class="hljs-keyword">var</span> deferred = Q.defer();
+      <span class="hljs-keyword">var</span> firstResult = results[<span class="hljs-number">0</span>]
+      <span class="hljs-keyword">var</span> errors = _.chain(results)
+        .filter( <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( result )</span> </span>{ <span class="hljs-keyword">return</span> result.state === <span class="hljs-string">'rejected'</span> })
+        .map( <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( error )</span> </span>{ <span class="hljs-keyword">return</span> error.reason; })
+        .value();
+
+      <span class="hljs-keyword">if</span> ( errors.length &gt; <span class="hljs-number">0</span> ) {
+        deferred.reject( errors );
+      } <span class="hljs-keyword">else</span> {
+        deferred.resolve();
+      }
+
+      <span class="hljs-keyword">return</span> deferred.promise;
+    }
+
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <h2 id="query">Query</h2>
 
@@ -577,11 +713,11 @@ function returning a new instance of the constructor</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               
             </div>
@@ -592,11 +728,11 @@ function returning a new instance of the constructor</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>map #run for expressive API</p>
 
@@ -613,7 +749,7 @@ function returning a new instance of the constructor</p>
 
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setup()
         .then(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
-          <span class="hljs-keyword">return</span> utilities.promiseSequence( procedureMethods )
+          <span class="hljs-keyword">return</span> promiseSequence( procedureMethods )
             .then(self.success)
             .fail(self.error);
         });
@@ -634,11 +770,11 @@ function returning a new instance of the constructor</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>attach all collections to the object
 context with the name of the collection
@@ -654,11 +790,11 @@ context as “accountsCollection”</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>var foo = ‘accounts’;<br>Q.ninvoke( db, ‘collection’, foo )
   .then(function( collection ) { console.log( collection ); });</p>
@@ -681,11 +817,469 @@ context as “accountsCollection”</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <h2 id="presenter-view">Presenter/View</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
+  <span class="hljs-keyword">var</span> Presenter = Utensils.Presenter = Utensils.View = Base.extend({
+
+    constructor: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( data )</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>ensure the argument is cast into an array</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.data = ( _.isArray( data ) ) ? data : [ data ];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>freeze the original data</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      _.each( <span class="hljs-keyword">this</span>.data, <span class="hljs-built_in">Object</span>.freeze );
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>map #run for expressive API</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    present: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.run.apply( <span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span> );
+    },
+
+    run: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( returnKeys )</span> </span>{
+      <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+
+      <span class="hljs-keyword">this</span>.returnKeys = returnKeys;
+
+      _.bindAll( <span class="hljs-keyword">this</span>, 
+        <span class="hljs-string">'results'</span>,
+
+        <span class="hljs-string">'_whitelist'</span>, 
+        <span class="hljs-string">'_blacklist'</span>, 
+        <span class="hljs-string">'_propertyMap'</span>,
+        <span class="hljs-string">'_customAttributes'</span>
+      );</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>execute the presenter methods on all items</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> presentPromises = _.map( <span class="hljs-keyword">this</span>.data, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( item )</span> </span>{
+        <span class="hljs-keyword">return</span> Q( self.runOne( item ) );
+      });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>return a promise representing the state
+of all items being presented</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">return</span> Q.all( presentPromises )
+        .then( <span class="hljs-keyword">this</span>.results );
+    },
+
+    runOne: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( item )</span> </span>{
+      <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+      <span class="hljs-keyword">var</span> result = _.clone(item);
+      <span class="hljs-keyword">var</span> deferred = Q.defer();
+      
+      result = _.compose(
+        deferred.resolve,
+        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( result )</span> </span>{
+          <span class="hljs-keyword">return</span> _.extend( result, self._customAttributes( item ) );
+        },
+        <span class="hljs-keyword">this</span>._propertyMap,
+        <span class="hljs-keyword">this</span>._blacklist,
+        <span class="hljs-keyword">this</span>._whitelist
+      )( result );
+
+      <span class="hljs-keyword">return</span> deferred.promise;
+    },
+
+    results: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( results )</span> </span>{
+      <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>if a specific set of return keys was specified
+filter the results to just those properties</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.returnKeys ) {
+        results = _.map( results, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( result )</span> </span>{
+          <span class="hljs-keyword">return</span> _.pick.call( <span class="hljs-literal">null</span>, result, self.returnKeys );
+        });
+      }
+
+      <span class="hljs-keyword">if</span> ( _.isArray( <span class="hljs-keyword">this</span>.data ) ) {
+        <span class="hljs-keyword">return</span> results;
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">return</span> results[<span class="hljs-number">0</span>];
+      }
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>whitelist keys</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _whitelist: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( item )</span> </span>{
+      <span class="hljs-keyword">if</span> ( !<span class="hljs-keyword">this</span>.whitelist ) <span class="hljs-keyword">return</span> item;
+
+      <span class="hljs-keyword">return</span> _.pick.call( <span class="hljs-literal">null</span>, item, <span class="hljs-keyword">this</span>.whitelist );
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>blacklist keys</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _blacklist: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( item )</span> </span>{
+      <span class="hljs-keyword">if</span> ( !<span class="hljs-keyword">this</span>.blacklist ) <span class="hljs-keyword">return</span> item;
+
+      <span class="hljs-keyword">return</span> _.omit.call( <span class="hljs-literal">null</span>, item, <span class="hljs-keyword">this</span>.blacklist );
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>rename properties</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _propertyMap: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( item )</span> </span>{
+      <span class="hljs-keyword">if</span> ( !<span class="hljs-keyword">this</span>.propertyMap ) <span class="hljs-keyword">return</span> item;
+      
+      _.each( <span class="hljs-keyword">this</span>.propertyMap, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( value, key )</span> </span>{
+        item[ value ] = item[ key ];
+        <span class="hljs-keyword">delete</span> item[ key ];
+      });
+
+      <span class="hljs-keyword">return</span> item;
+    },
+
+    _customAttributes: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( item )</span> </span>{
+      <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+      <span class="hljs-keyword">var</span> result = {};
+
+      <span class="hljs-keyword">var</span> customAttributeFunctions = <span class="hljs-keyword">this</span>.prepareProcedureMethods( _.functions( <span class="hljs-keyword">this</span>.constructor.__protoProps__ ), { 
+        context: { item: item } 
+      });
+
+      _.each( customAttributeFunctions, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( fn )</span> </span>{
+        result[ fn._name ] = fn();
+      });
+
+      <span class="hljs-keyword">return</span> result;
+    }
+
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <h2 id="policy">Policy</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
+  <span class="hljs-keyword">var</span> Policy = Utensils.Policy = Base.extend({</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>map #run for expressive API</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    analyze: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.run.apply( <span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span> );
+    },
+
+    run: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p>returns an object of all functions defined on the 
+implementation of the Validator constructor
+or, rather, is the object passed into Validator.extend</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+
+      <span class="hljs-keyword">var</span> procedureMethods = <span class="hljs-keyword">this</span>.prepareProcedureMethods( _.functions( <span class="hljs-keyword">this</span>.constructor.__protoProps__ ), { 
+        context: _.pick.call( <span class="hljs-literal">null</span>, <span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>.argumentNames )
+      });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <p>call all methods simultaneously, returning
+all results</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> procedureMethodPromises = returnArrayOfResultsFromExecutedFunctions( procedureMethods );
+      <span class="hljs-keyword">return</span> Q.allSettled( procedureMethodPromises )
+        .then( <span class="hljs-keyword">this</span>.parseResults );
+    },
+
+    prepareProcedureMethods: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( procedureMethodKeys, options )</span> </span>{
+      options = ( options || {} );
+      <span class="hljs-keyword">var</span> procedureMethods;
+
+      procedureMethods = getObjectMethodsByName( procedureMethodKeys, <span class="hljs-keyword">this</span> );
+      procedureMethods = wrapAnySyncFunctionsWithBooleanPromiseHandling( procedureMethods, options.context || <span class="hljs-keyword">this</span>, options );
+      procedureMethods = wrapAnySequenceFunctionsThatRequestedPromises( procedureMethods, options.context || <span class="hljs-keyword">this</span>, { 
+        sequence: <span class="hljs-literal">false</span>, 
+        reject: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( fn, reject )</span> </span>{
+          <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( error )</span> </span>{
+            <span class="hljs-keyword">return</span> reject({ name: fn._name, error: error });
+          }
+        }
+      });
+      procedureMethods = returnBoundObjectMethods( procedureMethods, options.context || <span class="hljs-keyword">this</span> );
+
+      <span class="hljs-keyword">return</span> procedureMethods;
+    },
+
+    parseResults: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( results )</span> </span>{
+      <span class="hljs-keyword">var</span> deferred = Q.defer();
+      <span class="hljs-keyword">var</span> firstResult = results[<span class="hljs-number">0</span>]
+      <span class="hljs-keyword">var</span> errors = _.chain(results)
+        .filter( <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( result )</span> </span>{ <span class="hljs-keyword">return</span> result.state === <span class="hljs-string">'rejected'</span> })
+        .map( <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( error )</span> </span>{ <span class="hljs-keyword">return</span> error.reason; })
+        .value();
+
+      <span class="hljs-keyword">if</span> ( errors.length &gt; <span class="hljs-number">0</span> ) {
+        deferred.reject( errors );
+      } <span class="hljs-keyword">else</span> {
+        deferred.resolve( <span class="hljs-keyword">this</span>.arguments );
+      }
+
+      <span class="hljs-keyword">return</span> deferred.promise;
+    }
+
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <h2 id="decorator">Decorator</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  
+  <span class="hljs-keyword">var</span> Decorator = Utensils.Decorator = Base.extend({
+
+    constructor: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( obj )</span> </span>{
+      <span class="hljs-keyword">if</span> ( <span class="hljs-built_in">arguments</span>.length === <span class="hljs-number">0</span> ) <span class="hljs-keyword">return</span>;
+
+      <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+      <span class="hljs-keyword">var</span> sequence = self.returnSequence.bind( self )();
+      <span class="hljs-keyword">var</span> methodToDecorate = obj[ <span class="hljs-keyword">this</span>.methodToDecorate ].bind( obj );
+      <span class="hljs-keyword">var</span> decoratedMethod = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> Q.when( methodToDecorate() )
+          .then( sequence )
+      };
+      obj[ <span class="hljs-keyword">this</span>.methodToDecorate ] = decoratedMethod;
+
+      <span class="hljs-keyword">return</span> obj;
+    },
+
+    returnSequence: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p>if only one method is defined on the prototype
+use that for the procedure, meaning this.procedure
+doesn’t need to be described with just one value</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> ( !<span class="hljs-keyword">this</span>.procedure ) {
+        <span class="hljs-keyword">var</span> protoPropProcedureMethods = _.functions( <span class="hljs-keyword">this</span>.constructor.__protoProps__ );
+        <span class="hljs-keyword">if</span> ( protoPropProcedureMethods.length === <span class="hljs-number">1</span> ) 
+          <span class="hljs-keyword">this</span>.procedure = protoPropProcedureMethods;
+      }
+
+      <span class="hljs-keyword">var</span> procedureMethods = <span class="hljs-keyword">this</span>.prepareProcedureMethods( <span class="hljs-keyword">this</span>.procedure, { 
+        firstMethodTakesArgument: <span class="hljs-literal">true</span> 
+      });
+
+      <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">var</span> args = [ procedureMethods ].concat( _.toArray( <span class="hljs-built_in">arguments</span> ) );
+        <span class="hljs-keyword">return</span> promiseSequence.apply( <span class="hljs-literal">null</span>, args );
+      };
+    }
+
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <h2 id="helpers">Helpers</h2>
 
@@ -694,11 +1288,11 @@ context as “accountsCollection”</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               
             </div>
@@ -731,17 +1325,17 @@ context as “accountsCollection”</p>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p>Attach #extend to each of the base objects</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  _.each([ Value, <span class="hljs-comment">/*Service, Form, Validator, Query, Presenter, Policy, Decorator*/</span> ], <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( Ctor )</span> </span>{
+            <div class="content"><div class='highlight'><pre>  _.each([ Value, Service, Form, Validator, Query, Presenter, Policy, Decorator ], <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( Ctor )</span> </span>{
     Ctor.extend = extend;
   });
 
@@ -750,9 +1344,9 @@ context as “accountsCollection”</p>
     
     <span class="hljs-keyword">var</span> procedureMethods;
 
-    procedureMethods = utilities.getObjectMethodsByName( procedureMethodKeys, <span class="hljs-keyword">this</span>, options );
-    procedureMethods = utilities.wrapAnySequenceFunctionsThatRequestedPromises( procedureMethods, options.context || <span class="hljs-keyword">this</span>, options );
-    procedureMethods = utilities.returnBoundObjectMethods( procedureMethods, options.context || <span class="hljs-keyword">this</span>, options );
+    procedureMethods = getObjectMethodsByName( procedureMethodKeys, <span class="hljs-keyword">this</span>, options );
+    procedureMethods = wrapAnySequenceFunctionsThatRequestedPromises( procedureMethods, options.context || <span class="hljs-keyword">this</span>, options );
+    procedureMethods = returnBoundObjectMethods( procedureMethods, options.context || <span class="hljs-keyword">this</span>, options );
 
     <span class="hljs-keyword">return</span> procedureMethods;
   };
@@ -761,6 +1355,188 @@ context as “accountsCollection”</p>
     <span class="hljs-keyword">return</span> fns.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(soFar, f)</span> </span>{
       <span class="hljs-keyword">return</span> soFar.then(f);
     }, initialVal ? Q(initialVal) : Q.when());
+  };
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">wrapWithPromise</span><span class="hljs-params">( staticFn, args, context, options )</span> </span>{
+    options = ( options || {} );
+
+    <span class="hljs-keyword">var</span> promiseFn = _.wrap( staticFn, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( fn )</span> </span>{
+      <span class="hljs-keyword">var</span> token = Q.defer();
+      <span class="hljs-keyword">var</span> resolve = ( options.resolve ) ? options.resolve( fn, token.resolve ) : token.resolve;
+      <span class="hljs-keyword">var</span> reject =  ( options.reject )  ? options.reject( fn, token.reject )   : token.reject;
+      
+      args = args.concat([resolve, reject]);
+      fn.apply( context, args );
+      <span class="hljs-keyword">return</span> token.promise;
+    });
+
+    <span class="hljs-keyword">return</span> promiseFn;
+  };
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">wrapAnySyncFunctionsWithBooleanPromiseHandling</span><span class="hljs-params">( fns, context, options )</span> </span>{
+    options = ( options || {} );
+
+    <span class="hljs-keyword">return</span> _.chain( fns )
+      .compact()
+      .map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( fn )</span> </span>{
+        <span class="hljs-keyword">if</span> ( fn.length === <span class="hljs-number">0</span> ) {
+          <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+            <span class="hljs-keyword">var</span> token = Q.defer();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              <p>if the function returns true, resolve the promise
+otherwise, reject it</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> ( fn.call( context ) === <span class="hljs-literal">true</span> ) 
+              token.resolve();
+            <span class="hljs-keyword">else</span> 
+              token.reject({ name: fn._name });
+
+            <span class="hljs-keyword">return</span> token.promise;
+          }
+        } <span class="hljs-keyword">else</span> {
+          <span class="hljs-keyword">return</span> fn;
+        }
+      })
+      .value();
+  };
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">scopeName</span><span class="hljs-params">( newFn, oldFn )</span> </span>{
+    newFn._name = oldFn._name;
+  };
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">wrapAnySequenceFunctionsThatRequestedPromises</span><span class="hljs-params">( fns, context, options )</span> </span>{
+    <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+    options = ( options || {} );
+
+    <span class="hljs-keyword">return</span> _.chain( fns )
+      .compact()
+      .map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(fn, index)</span> </span>{
+        <span class="hljs-keyword">var</span> newFn = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( res )</span> </span>{
+          <span class="hljs-keyword">var</span> args = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-65">&#182;</a>
+              </div>
+              <p>if the operation is after the first,
+meaning that it could accept a result from 
+a previous function, make
+the first argument the result of the previous
+function, even if it’s undefined.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">if</span> ( index &gt;= <span class="hljs-number">1</span> &amp;&amp; options.sequence !== <span class="hljs-literal">false</span> || index === <span class="hljs-number">0</span> &amp;&amp; options.firstMethodTakesArgument === <span class="hljs-literal">true</span> ) args.push(res);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-66">&#182;</a>
+              </div>
+              <p>if we’re dealing with the first item in the sequence
+which cannot have a value returned from a previous promise,
+then any arguments means resolve and reject are requested
+If we’re in a subsequent chain link, it is possible that 
+a return value is requested, thusly, if only one argument is
+specified, this means they only want the return value from the
+previous promise, but if more than one is requested, they must want
+at least the resolve fn, or both resolve and reject</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">if</span> (( index === <span class="hljs-number">0</span> &amp;&amp; options.firstMethodTakesArgument !== <span class="hljs-literal">true</span> &amp;&amp; fn.length &gt;= <span class="hljs-number">1</span> ) || ( index &gt;= <span class="hljs-number">1</span> &amp;&amp; fn.length &gt;= <span class="hljs-number">2</span> )) {
+            fn = self.wrapWithPromise( fn, args, context, options );
+          }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-67">&#182;</a>
+              </div>
+              <p>return the executed new function with the right args</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">return</span> fn.apply( context, args );
+        }
+        self.scopeName( newFn, fn );
+        <span class="hljs-keyword">return</span> newFn;
+      })
+      .value();
+  };
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">returnArrayOfResultsFromExecutedFunctions</span><span class="hljs-params">( fns )</span> </span>{
+    <span class="hljs-keyword">return</span> _.map(fns, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(fn)</span> </span>{
+      <span class="hljs-keyword">return</span> fn();
+    });
+  };
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getObjectMethodsByName</span><span class="hljs-params">( fnNames, obj )</span> </span>{
+    <span class="hljs-keyword">return</span> _.map( fnNames, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( fnName )</span> </span>{
+      <span class="hljs-keyword">var</span> fn = obj[fnName];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <p>if the function is found, scope the name of the function
+to the function itself for later reference. 
+Uses _name since name is read-only</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> ( fn ) { fn._name = fnName; }
+
+      <span class="hljs-keyword">return</span> fn;
+    });
+  };
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">returnBoundObjectMethods</span><span class="hljs-params">( fns, obj )</span> </span>{
+    <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+
+    <span class="hljs-keyword">return</span> _.chain(fns)
+      .compact()
+      .map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(fn)</span> </span>{
+        <span class="hljs-keyword">var</span> boundFn = _.bind( fn, obj );
+        self.scopeName( boundFn, fn );
+        <span class="hljs-keyword">return</span> boundFn;
+      })
+      .value();
+  };
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">memoizeAllFunctions</span><span class="hljs-params">( fns )</span> </span>{
+    <span class="hljs-keyword">return</span> _.map( fns, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">( fn )</span> </span>{
+      <span class="hljs-keyword">return</span> _.memoize( fn );
+    })
   };
 
   <span class="hljs-keyword">return</span> Utensils;
