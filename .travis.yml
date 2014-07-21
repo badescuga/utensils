@@ -7,4 +7,4 @@ addons:
     code_climate:
         repo_token: 1800792ea19e613027173a34fbe31e37aae6da432018331e8d8c2bee16ac96ac
 after_script:
-  - npm run-script cov
+  - "istanbul cover lib/utensils.js && cat coverage/lcov.info | codeclimate"
