@@ -138,8 +138,20 @@
     },
 
     run: function(initialValue) {
-      return promiseSequence.call( this, this.procedureMethods, initialValue)
-        .fail(this.error);
+      var self = this;
+      var deferred = Q.defer();
+
+      promiseSequence.call( this, this.procedureMethods, initialValue)
+        .then(function(resp) {
+          if ( self.success ) self.success(resp);
+          deferred.resolve();
+        })
+        .fail(function(err) {
+          if ( self.error ) self.error(err);
+          deferred.reject(err);
+        });
+
+      return deferred.promise;
     }
 
   });
