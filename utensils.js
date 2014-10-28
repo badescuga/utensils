@@ -143,11 +143,11 @@
 
       promiseSequence.call( this, this.procedureMethods, initialValue)
         .then(function(resp) {
-          if ( self.success ) self.success(resp);
+          if ( self.success ) self.success(resp).bind(self);
           deferred.resolve(resp);
         })
         .fail(function(err) {
-          if ( self.error ) self.error(err);
+          if ( self.error ) self.error(err).bind(self);
           deferred.reject(err);
         });
 
