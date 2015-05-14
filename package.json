@@ -23,12 +23,12 @@
   },
   "homepage": "http://utensilsjs.org",
   "bugs": {
-    "url": "http://github.com/createbang/utensils/issues",
+    "url": "http://github.com/crushlovely/utensils/issues",
     "email": "mlp.brooklyn@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/createbang/utensils.git"
+    "url": "https://github.com/crushlovely/utensils.git"
   },
   "license": "MIT",
   "main": "utensils.js",
